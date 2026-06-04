@@ -1,0 +1,19 @@
+# Docker Setup Instructions
+
+# Open the terminal and navigate to the folder where you placed the project files
+# (avoid spaces or special characters in folder names)
+
+# Build the Docker image
+docker build -t terraform-image:awsflink .
+
+# Start the Docker container
+docker run -dit --name awsflink -v ./IaC:/iac terraform-image:awsflink /bin/bash
+
+# NOTE: On Windows, replace ./IaC with the full path to the folder, for example:
+# docker run -dit --name awsflink -v C:\Projects\aws-emr-flink-iac\IaC:/iac terraform-image:awsflink /bin/bash
+
+# Verify Terraform and AWS CLI versions
+terraform version
+aws --version
+
+# NOTE: YOU MUST HAVE ANACONDA PYTHON INSTALLED LOCALLY FOR LOCAL DEPLOY.

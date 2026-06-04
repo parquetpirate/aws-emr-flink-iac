@@ -1,0 +1,61 @@
+# Project 1 - Provisioning Data Processing Infrastructure with AWS EMR and Apache Flink
+
+# Create an S3 bucket named emr-flink-<account-id> and configure it in the emr.tf file
+
+# Initialize Terraform
+terraform init
+
+# Create the Plan and save it to disk
+terraform plan -var-file config.tfvars -out terraform.tfplan
+
+# Run apply with the variables file (with auto-approve)
+terraform apply -auto-approve -var-file config.tfvars
+
+# Run apply with the variables file (without auto-approve)
+terraform apply -var-file config.tfvars
+
+# SSH connection to the cluster master node
+# Inside the Docker container, navigate to the folder where the cluster keys were created during deploy
+
+# Adjust private key permissions
+chmod 400 deployer
+
+# Connect via SSH (replace with your cluster's public DNS)
+ssh -i deployer hadoop@ec2-3-14-29-59.us-east-2.compute.amazonaws.com
+
+# Create the input directory in HDFS
+hdfs dfs -mkdir /user/root/input
+
+# Copy the data file to the server as shown in the course
+
+# Load the file into HDFS
+hdfs dfs -put dados.txt /user/root/input
+
+# Count word occurrences in the file using Apache Flink
+flink run -m yarn-cluster /usr/lib/flink/examples/streaming/WordCount.jar --input hdfs:///user/root/input/dados.txt --output hdfs:///user/root/saida/
+
+# Retrieve output file from HDFS to local filesystem
+hdfs dfs -get <hdfs-file-name>
+
+# The commands below must be run inside the Docker container (client machine)
+# Replace with your EMR cluster ID
+
+aws emr add-steps --cluster-id j-32R8POOJ1HIMA \
+--steps Type=CUSTOM_JAR,Name=Job1_P1,Jar=command-runner.jar,\
+Args="flink","run","-m","yarn-cluster",\
+"/usr/lib/flink/examples/streaming/WordCount.jar",\
+"--input","hdfs:///user/root/input/dados.txt","--output","hdfs:///user/root/saidajob1/" \
+--region us-east-2
+
+aws emr add-steps --cluster-id j-32R8POOJ1HIMA \
+--steps Type=CUSTOM_JAR,Name=Job2_P1,Jar=command-runner.jar,\
+Args="flink","run","-m","yarn-cluster",\
+"/usr/lib/flink/examples/streaming/WordCount.jar",\
+"--input","s3://emr-flink-<account-id>/dados.txt","--output","s3://emr-flink-<account-id>/" \
+--region us-east-2
+
+# Create the destroy Plan and save it to disk
+terraform plan -destroy -var-file config.tfvars -out terraform.tfplan
+
+# Execute the destroy
+terraform apply terraform.tfplan
