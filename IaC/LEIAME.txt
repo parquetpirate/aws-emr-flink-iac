@@ -1,6 +1,6 @@
 # Project 1 - Provisioning Data Processing Infrastructure with AWS EMR and Apache Flink
 
-# Create an S3 bucket named emr-flink-<account-id> and configure it in the emr.tf file
+# Create an S3 bucket named aws-emr-flink-<seu-account-id> and configure it in the emr.tf file
 
 # Initialize Terraform
 terraform init
@@ -21,7 +21,7 @@ terraform apply -var-file config.tfvars
 chmod 400 deployer
 
 # Connect via SSH (replace with your cluster's public DNS)
-ssh -i deployer hadoop@ec2-3-14-29-59.us-east-2.compute.amazonaws.com
+ssh -i deployer hadoop@ec2-3-23-85-13.us-east-2.compute.amazonaws.com
 
 # Create the input directory in HDFS
 hdfs dfs -mkdir /user/root/input
@@ -35,23 +35,24 @@ hdfs dfs -put dados.txt /user/root/input
 flink run -m yarn-cluster /usr/lib/flink/examples/streaming/WordCount.jar --input hdfs:///user/root/input/dados.txt --output hdfs:///user/root/saida/
 
 # Retrieve output file from HDFS to local filesystem
-hdfs dfs -get <hdfs-file-name>
+hdfs dfs -get /user/root/saida/2026-06-05--01/part-499ec0e8-eb33-4931-8756-267b9c9d4a5c-0
 
 # The commands below must be run inside the Docker container (client machine)
 # Replace with your EMR cluster ID
 
-aws emr add-steps --cluster-id j-32R8POOJ1HIMA \
+aws emr add-steps --cluster-id j-13QUZ25UU2QOH \
 --steps Type=CUSTOM_JAR,Name=Job1_P1,Jar=command-runner.jar,\
 Args="flink","run","-m","yarn-cluster",\
 "/usr/lib/flink/examples/streaming/WordCount.jar",\
 "--input","hdfs:///user/root/input/dados.txt","--output","hdfs:///user/root/saidajob1/" \
 --region us-east-2
 
-aws emr add-steps --cluster-id j-32R8POOJ1HIMA \
+aws emr add-steps --cluster-id j-13QUZ25UU2QOH \
 --steps Type=CUSTOM_JAR,Name=Job2_P1,Jar=command-runner.jar,\
 Args="flink","run","-m","yarn-cluster",\
 "/usr/lib/flink/examples/streaming/WordCount.jar",\
-"--input","s3://emr-flink-<account-id>/dados.txt","--output","s3://emr-flink-<account-id>/" \
+"--input","s3://aws-emr-flink-<seu-account-id>/dados.txt",\
+"--output","s3://aws-emr-flink-<seu-account-id>/output/wordcount" \
 --region us-east-2
 
 # Create the destroy Plan and save it to disk

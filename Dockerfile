@@ -19,7 +19,6 @@ RUN wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform
 
 # Create the /iac folder as a mount point for a volume
 RUN mkdir /iac
-VOLUME /IaC
 
 # Create the Downloads folder and install AWS CLI (to access AWS)
 RUN mkdir Downloads && \

@@ -12,7 +12,7 @@ resource "aws_iam_role" "emr_service_role" {
       {
         "Sid": "",
         "Effect": "Allow",
-        "Principal":{git remote -v
+        "Principal":{
           "Service": "elasticmapreduce.amazonaws.com"
         },
         "Action": "sts:AssumeRole"

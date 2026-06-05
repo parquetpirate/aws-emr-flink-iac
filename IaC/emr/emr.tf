@@ -48,7 +48,7 @@ resource "aws_emr_cluster" "emr_cluster" {
   dynamic "kerberos_attributes" {
     for_each = var.kerberos_attributes
     content {
-      name               = kerberos_attributes.value["realm"]
+      realm              = kerberos_attributes.value["realm"]
       kdc_admin_password = kerberos_attributes.value["kdc_admin_password"]
     }
   }

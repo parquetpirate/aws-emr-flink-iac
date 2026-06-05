@@ -1,64 +1,38 @@
-# Variables
-
-# Definition of the 'project' variable
-variable "project" {
-
-}
+# Variables# Definition of the 'project' variable
+variable "project" {}
 
 # Definition of the 'environment' variable
-variable "environment" {
-
-}
+variable "environment" {}
 
 # Definition of the 'tags' variable
-variable "tags" {
-
-}
+variable "tags" {}
 
 # Definition of the 'key_name' variable
-variable "key_name" {
-
-}
+variable "key_name" {}
 
 # Definition of the 'vpc_id' variable
-variable "vpc_id" {
-
-}
+variable "vpc_id" {}
 
 # Definition of the 'public_subnet' variable
-variable "public_subnet" {
-
-}
+variable "public_subnet" {}
 
 # Definition of the 'additional_security_group_id' variable
-variable "additional_security_group_id" {
-
-}
+variable "additional_security_group_id" {}
 
 # Definition of the 'release_label' variable
-variable "release_label" {
-
-}
+variable "release_label" {}
 
 # Definition of the 'applications' variable
-variable "applications" {
-
-}
+variable "applications" {}
 
 # Definition of the 'main_instance_type' variable
-variable "main_instance_type" {
-
-}
+variable "main_instance_type" {}
 
 # Definition of the 'core_instance_type' variable
-variable "core_instance_type" {
-
-}
+variable "core_instance_type" {}
 
 # Definition of the 'core_instance_count' variable
-variable "core_instance_count" {
-
-}
+variable "core_instance_count" {}
 
 # Definition of the 'core_instance_ebs_volume_size' variable with default value
 variable "core_instance_ebs_volume_size" {
@@ -72,7 +46,7 @@ variable "security_configuration_name" {
 
 # Definition of the 'log_uri' variable with default value
 variable "log_uri" {
-  default = "s3://projeto1-463032375612"
+  default = "s3://aws-emr-flink-<seu-account-id>"
 }
 
 # Definition of the 'configurations' variable with default null

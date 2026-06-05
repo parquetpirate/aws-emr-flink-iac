@@ -55,18 +55,18 @@ resource "aws_security_group" "core_security_group" {
   revoke_rules_on_delete = true
 
   # Inbound rule to allow all internal traffic within the security group itself
-  ingress = {
-    from_port = "0"
-    to_port   = "0"
+  ingress {
+    from_port = 0
+    to_port   = 0
     protocol  = "-1"
     self      = true
   }
 
   # Outbound rule to allow all outbound traffic
-  egress = {
-    from_port   = "0"
-    to_port     = "0"
+  egress {
+    from_port   = 0
+    to_port     = 0
     protocol    = "-1"
-    cidr_blocks = "[0.0.0.0/0]"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
